@@ -1,12 +1,18 @@
 import React, { useState, useEffect, useRef } from "react"
 import axios, { AxiosResponse } from "axios"
-import { Button, Container, Grid } from "@mui/material"
+import { Container, Fab, Grid } from "@mui/material"
+import ArrowUpward from "@mui/icons-material/ArrowUpward"
 import { Character, Info } from "./types/rickAndMortyApiInterfaces"
 import CharacterCard from "./components/CharacterCard"
 import InfiteScroll from "./components/InfiteScroll"
+import "./styles/base.scss"
 
-const getCharacters = async (page: number): Promise<AxiosResponse<Info<Character[]>>> => {
+const getCharacters: (page: number) => Promise<AxiosResponse<Info<Character[]>>> = async (page) => {
   return await axios.get<Info<Character[]>>(`https://rickandmortyapi.com/api/character/?page=${page}`)
+}
+
+const scrollToTop: () => void = () => {
+  window.scrollTo(0, 0)
 }
 
 const App: React.FC<{}> = () => {
@@ -31,6 +37,15 @@ const App: React.FC<{}> = () => {
           })}
         </Grid>
       </Container>
+      <Fab
+        className='go-top-button'
+        color='primary'
+        aria-label='go to top'
+        title='Go to top'
+        onClick={() => scrollToTop()}
+      >
+        <ArrowUpward />
+      </Fab>
     </InfiteScroll>
   )
 }
