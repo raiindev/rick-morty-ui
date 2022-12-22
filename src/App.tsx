@@ -6,7 +6,7 @@ import { Character, Info } from "./types/rickAndMortyApiInterfaces"
 import CharacterCard from "./components/CharacterCard"
 import InfiteScroll from "./components/InfiteScroll"
 import CharacterDialog from "./components/CharacterDialog"
-import "./styles/base.scss"
+import { blueGrey } from "@mui/material/colors"
 
 interface DialogStatus {
   selectedValue: Character | undefined
@@ -57,17 +57,21 @@ const App: React.FC<{}> = () => {
 
   return (
     <InfiteScroll handler={() => setCurrentPage(currentPage + 1)} page={currentPage}>
-      <Container maxWidth='xl'>
+      <Container maxWidth='xl' sx={{ backgroundColor: blueGrey["900"] }}>
         <Grid container spacing={2}>
           {memoizedCards}
         </Grid>
       </Container>
       <Fab
-        className='go-top-button'
         color='primary'
         aria-label='go to top'
         title='Go to top'
         onClick={() => scrollToTop()}
+        sx={{
+          position: "fixed",
+          bottom: "24px",
+          right: "24px",
+        }}
       >
         <ArrowUpward />
       </Fab>
