@@ -43,14 +43,13 @@ const getStatusColor: (status: string) => string = (status) => {
 
 const CharacterIntro: FC<Pick<Character, "name" | "status">> = ({ name, status }) => (
   <div style={{ marginBottom: "4px", position: "relative" }}>
-    <Typography sx={{ fontSize: "20px", fontWeight: "600", lineHeight: 1.1, maxWidth: "60%" }}>{name}</Typography>
+    <Typography sx={{ fontSize: "1.25rem", fontWeight: "600", lineHeight: 1.1, maxWidth: "60%" }}>{name}</Typography>
     <Typography
       sx={{
         border: `2px dashed ${getStatusColor(status)}`,
         borderRadius: "5px",
         color: getStatusColor(status),
         fontFamily: "Dosis, sans-serif",
-        fontSize: "16px",
         fontWeight: "700",
         lineHeight: 1,
         padding: "5px",
@@ -89,18 +88,18 @@ const CharacterCard: FC<Character & { openCharacterDialog: any }> = memo((props)
             <Typography
               sx={{
                 color: grey[300],
-                fontSize: "12px",
+                fontSize: ".75rem",
                 fontWeight: "500",
                 lineHeight: 1.5,
               }}
             >
               Species:
             </Typography>
-            <Typography sx={{ fontSize: "16px", fontWeight: "700", lineHeight: 1.1 }}>{species}</Typography>
+            <Typography sx={{ fontWeight: "700", lineHeight: 1.1 }}>{species}</Typography>
             <Typography
               sx={{
                 color: grey[300],
-                fontSize: "16px",
+                fontSize: ".95rem",
                 fontWeight: "500",
                 lineHeight: 1.1,
                 marginBottom: "4px",
@@ -109,7 +108,7 @@ const CharacterCard: FC<Character & { openCharacterDialog: any }> = memo((props)
             >
               Last known location:
             </Typography>
-            <Typography component='span' sx={{ fontSize: "18px", fontWeight: "700", lineHeight: 1.1 }}>
+            <Typography component='span' sx={{ fontSize: "1.2rem", fontWeight: "700", lineHeight: 1.1 }}>
               {location.name}
             </Typography>
           </CardContent>

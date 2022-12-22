@@ -7,6 +7,7 @@ import CharacterCard from "./components/CharacterCard"
 import InfiteScroll from "./components/InfiteScroll"
 import CharacterDialog from "./components/CharacterDialog"
 import { blueGrey } from "@mui/material/colors"
+import logo from "./images/logo.png"
 
 interface DialogStatus {
   selectedValue: Character | undefined
@@ -56,31 +57,47 @@ const App: React.FC<{}> = () => {
   }, [handleCharacterCardClick, characters])
 
   return (
-    <InfiteScroll handler={() => setCurrentPage(currentPage + 1)} page={currentPage}>
-      <Container maxWidth='xl' sx={{ backgroundColor: blueGrey["900"] }}>
-        <Grid container spacing={2}>
-          {memoizedCards}
-        </Grid>
-      </Container>
-      <Fab
-        color='primary'
-        aria-label='go to top'
-        title='Go to top'
-        onClick={() => scrollToTop()}
-        sx={{
+    <>
+      <div
+        style={{
+          backgroundColor: blueGrey["900"],
+          display: "flex",
+          height: "75px",
+          justifyContent: "center",
           position: "fixed",
-          bottom: "24px",
-          right: "24px",
+          top: 0,
+          width: "100%",
+          zIndex: 10,
         }}
       >
-        <ArrowUpward />
-      </Fab>
-      <CharacterDialog
-        open={dialogStatus.isOpen}
-        selectedValue={dialogStatus.selectedValue}
-        onClose={handleDialogClose}
-      />
-    </InfiteScroll>
+        <img src={logo} alt='Rick and Morty logo' style={{ height: "75px" }} />
+      </div>
+      <Container maxWidth='xl' sx={{ backgroundColor: blueGrey["900"], paddingTop: "80px" }}>
+        <InfiteScroll handler={() => setCurrentPage(currentPage + 1)} page={currentPage}>
+          <Grid container spacing={2}>
+            {memoizedCards}
+          </Grid>
+          <Fab
+            color='primary'
+            aria-label='go to top'
+            title='Go to top'
+            onClick={() => scrollToTop()}
+            sx={{
+              position: "fixed",
+              bottom: "24px",
+              right: "24px",
+            }}
+          >
+            <ArrowUpward />
+          </Fab>
+          <CharacterDialog
+            open={dialogStatus.isOpen}
+            selectedValue={dialogStatus.selectedValue}
+            onClose={handleDialogClose}
+          />
+        </InfiteScroll>
+      </Container>
+    </>
   )
 }
 
