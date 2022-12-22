@@ -1,7 +1,60 @@
-import { FC, memo } from "react"
+import { FC, memo, useEffect, useState } from "react"
+import axios, { AxiosResponse } from "axios"
+import { SxProps } from "@mui/material"
+import Typography from "@mui/material/Typography"
 import Dialog from "@mui/material/Dialog"
+import DialogContent from "@mui/material/DialogContent"
 import DialogTitle from "@mui/material/DialogTitle"
-import { Character } from "../types/rickAndMortyApiInterfaces"
+import Box from "@mui/material/Box"
+import Chip from "@mui/material/Chip"
+import { blueGrey } from "@mui/material/colors"
+import { Character, Episode, Info } from "../types/rickAndMortyApiInterfaces"
+import CharacterStatusChip from "./CharacterStatusChip"
+
+interface CustomStyles {
+  [key: string]: SxProps
+}
+
+const styles: CustomStyles = {
+  CharacterDialog: {
+    alignItems: "center",
+    backgroundColor: `${blueGrey["700"]} !important`,
+    color: "white",
+    display: "flex",
+    flexDirection: "column",
+
+    img: {
+      borderRadius: "50%",
+      width: "150px",
+    },
+  },
+  CharacterDialogTitle: {
+    fontSize: "2rem",
+    fontWeight: 700,
+    paddingBottom: 0,
+  },
+  CharacterDialogChipsContainer: {},
+  CharacterDialogChip: {
+    color: "white",
+    borderWidth: "2px",
+    margin: "0 6px 12px 0",
+  },
+  CharacterDialogEpisodes: {
+    textAlign: "center",
+    "> p": {
+      fontSize: "1.2rem",
+      fontWeight: 700,
+      marginBottom: "8px",
+    },
+    div: {
+      maxHeight: "200px",
+      overflow: "auto",
+    },
+    "div p": {
+      fontSize: ".95rem",
+    },
+  },
+}
 
 export interface CharacterDialogProps {
   open: boolean
@@ -9,16 +62,67 @@ export interface CharacterDialogProps {
   onClose: () => void
 }
 
+const getCharacterEpisodes: (characterEpisodes: number[]) => Promise<AxiosResponse<Episode[] | Episode>> = async (
+  characterEpisodes
+) => await axios.get<Episode[] | Episode>(`https://rickandmortyapi.com/api/episode/${characterEpisodes.toString()}`)
+
+const getEpisodesNumber = (episodes: string[]): number[] =>
+  episodes.map((episode) => parseInt(episode.substring(episode.lastIndexOf("/") + 1)))
+
 const CharacterDialog: FC<CharacterDialogProps> = memo(({ open, selectedValue, onClose }) => {
-  const handleClose = () => {
-    onClose()
+  const [episodes, setEpisodes] = useState<Pick<Episode, "id" | "episode" | "name">[] | never[]>([])
+
+  useEffect(() => {
+    if (selectedValue?.episode) {
+      const episodesNumber = getEpisodesNumber(selectedValue?.episode)
+      getCharacterEpisodes(episodesNumber)
+        .then(({ data }) => {
+          if (Array.isArray(data)) {
+            setEpisodes(data.map(({ episode, id, name }) => ({ episode, id, name })))
+          } else {
+            setEpisodes([{ episode: data.episode, id: data.id, name: data.name }])
+          }
+        })
+        .catch(console.error)
+    }
+  }, [selectedValue])
+
+  if (selectedValue) {
+    const { gender, image, location, name, species, status } = selectedValue
+
+    const handleClose = () => {
+      onClose()
+    }
+
+    return (
+      <Dialog onClose={handleClose} open={open}>
+        <DialogContent sx={styles.CharacterDialog}>
+          <CharacterStatusChip status={status} overrideStyles={{ alignSelf: "flex-start", marginBottom: "12px" }} />
+          <img src={image} alt={`${name}`} />
+          <DialogTitle sx={styles.CharacterDialogTitle}>{selectedValue.name}</DialogTitle>
+          <Typography sx={{ paddingBottom: "16px" }}>
+            Last seen in: <b>{location.name}</b>
+          </Typography>
+          <Box sx={styles.CharacterDialogChips}>
+            <Chip sx={styles.CharacterDialogChip} label={species} variant='outlined' />
+            <Chip sx={styles.CharacterDialogChip} label={gender} variant='outlined' />
+          </Box>
+          <Box sx={styles.CharacterDialogEpisodes}>
+            <Typography>Episodes:</Typography>
+            <Box>
+              {episodes.map(({ episode, id, name }) => (
+                <Typography key={id}>
+                  {episode} - {name}
+                </Typography>
+              ))}
+            </Box>
+          </Box>
+        </DialogContent>
+      </Dialog>
+    )
   }
 
-  return selectedValue ? (
-    <Dialog onClose={handleClose} open={open}>
-      <DialogTitle>{selectedValue.name}</DialogTitle>
-    </Dialog>
-  ) : null
+  return null
 })
 
 export default CharacterDialog

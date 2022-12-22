@@ -1,7 +1,8 @@
 import { FC, memo } from "react"
 import { Card, CardContent, CardMedia, Grid, SxProps, Typography } from "@mui/material"
 import { Character } from "../types/rickAndMortyApiInterfaces"
-import { blueGrey, green, grey, red } from "@mui/material/colors"
+import { blueGrey, grey } from "@mui/material/colors"
+import CharacterStatusChip from "./CharacterStatusChip"
 
 interface CustomStyles {
   [key: string]: SxProps<{}>
@@ -30,37 +31,17 @@ const styles: CustomStyles = {
   },
 }
 
-const getStatusColor: (status: string) => string = (status) => {
-  switch (status) {
-    case "Alive":
-      return green["700"]
-    case "Dead":
-      return red["400"]
-    default:
-      return grey["500"]
-  }
-}
-
 const CharacterIntro: FC<Pick<Character, "name" | "status">> = ({ name, status }) => (
-  <div style={{ marginBottom: "4px", position: "relative" }}>
+  <div aria-label='character-intro' style={{ marginBottom: "4px", position: "relative" }}>
     <Typography sx={{ fontSize: "1.25rem", fontWeight: "600", lineHeight: 1.1, maxWidth: "60%" }}>{name}</Typography>
-    <Typography
-      sx={{
-        border: `2px dashed ${getStatusColor(status)}`,
-        borderRadius: "5px",
-        color: getStatusColor(status),
-        fontFamily: "Dosis, sans-serif",
-        fontWeight: "700",
-        lineHeight: 1,
-        padding: "5px",
+    <CharacterStatusChip
+      status={status}
+      overrideStyles={{
         position: "absolute",
-        right: 0,
-        textTransform: "uppercase",
         top: 0,
+        right: 0,
       }}
-    >
-      {status === "Dead" ? "Decesead" : status}
-    </Typography>
+    />
   </div>
 )
 

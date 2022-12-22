@@ -14,9 +14,8 @@ interface DialogStatus {
   isOpen: boolean
 }
 
-const getCharacters: (page: number) => Promise<AxiosResponse<Info<Character[]>>> = async (page) => {
-  return await axios.get<Info<Character[]>>(`https://rickandmortyapi.com/api/character/?page=${page}`)
-}
+const getCharacters: (page: number) => Promise<AxiosResponse<Info<Character[]>>> = async (page) =>
+  await axios.get<Info<Character[]>>(`https://rickandmortyapi.com/api/character/?page=${page}`)
 
 const scrollToTop: () => void = () => {
   window.scrollTo(0, 0)
