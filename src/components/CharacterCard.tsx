@@ -84,7 +84,7 @@ const CharacterCard: FC<Character & { openCharacterDialog: any }> = memo((props)
   } = styles
 
   return (
-    <Grid item xs={12} sm={12} md={6} xl={4}>
+    <Grid item xs={12} sm={12} md={6} xl={4} role='listitem'>
       <Card sx={CardContainer} onClick={() => openCharacterDialog(props)} title='Click to see more details'>
         <CardContent sx={CharacterCardContent}>
           <CardMedia component='img' image={image} alt={name} sx={CardImage} loading='lazy' />
