@@ -82,6 +82,13 @@ const CharacterDialog: FC<CharacterDialogProps> = memo(({ open, selectedValue, o
 
   if (selectedValue) {
     const { gender, image, location, name, species, status } = selectedValue
+    const {
+      CharacterDialog,
+      CharacterDialogTitle,
+      CharacterDialogChips,
+      CharacterDialogChip,
+      CharacterDialogEpisodes,
+    } = styles
 
     const handleClose = () => {
       onClose()
@@ -89,18 +96,18 @@ const CharacterDialog: FC<CharacterDialogProps> = memo(({ open, selectedValue, o
 
     return (
       <Dialog onClose={handleClose} open={open}>
-        <DialogContent sx={styles.CharacterDialog}>
+        <DialogContent sx={CharacterDialog}>
           <CharacterStatusChip status={status} overrideStyles={{ alignSelf: "flex-start", marginBottom: "12px" }} />
-          <img src={image} alt={`${name}`} />
-          <DialogTitle sx={styles.CharacterDialogTitle}>{selectedValue.name}</DialogTitle>
+          <img src={image} alt={`${name}`} loading='lazy' />
+          <DialogTitle sx={CharacterDialogTitle}>{selectedValue.name}</DialogTitle>
           <Typography sx={{ paddingBottom: "16px" }}>
             Last seen in: <b>{location.name}</b>
           </Typography>
-          <Box sx={styles.CharacterDialogChips}>
-            <Chip sx={styles.CharacterDialogChip} label={species} variant='outlined' />
-            <Chip sx={styles.CharacterDialogChip} label={gender} variant='outlined' />
+          <Box sx={CharacterDialogChips}>
+            <Chip sx={CharacterDialogChip} label={species} variant='outlined' />
+            <Chip sx={CharacterDialogChip} label={gender} variant='outlined' />
           </Box>
-          <Box sx={styles.CharacterDialogEpisodes}>
+          <Box sx={CharacterDialogEpisodes}>
             <Typography>Episodes:</Typography>
             <Box>
               {episodes.map(({ episode, id, name }) => (

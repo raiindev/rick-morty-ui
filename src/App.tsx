@@ -1,11 +1,14 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react"
-import { Container, Fab, Grid } from "@mui/material"
+import Box from "@mui/material/Box"
+import Container from "@mui/material/Container"
+import Fab from "@mui/material/Fab"
+import Grid from "@mui/material/Grid"
+import blueGrey from "@mui/material/colors/blueGrey"
 import ArrowUpward from "@mui/icons-material/ArrowUpward"
 import { Character } from "./types/rickAndMortyApiInterfaces"
 import CharacterCard from "./components/CharacterCard"
 import InfiteScroll from "./components/InfiteScroll"
 import CharacterDialog from "./components/CharacterDialog"
-import { blueGrey } from "@mui/material/colors"
 import logo from "./images/logo.png"
 import { getCharacters, scrollToTop } from "./utils"
 
@@ -50,8 +53,8 @@ const App: React.FC<{}> = () => {
 
   return (
     <>
-      <div
-        style={{
+      <Box
+        sx={{
           backgroundColor: blueGrey["900"],
           display: "flex",
           height: "75px",
@@ -63,7 +66,7 @@ const App: React.FC<{}> = () => {
         }}
       >
         <img src={logo} alt='Rick and Morty logo' style={{ height: "75px" }} />
-      </div>
+      </Box>
       <Container maxWidth='xl' sx={{ backgroundColor: blueGrey["900"], paddingTop: "80px" }}>
         <InfiteScroll handler={() => setCurrentPage(currentPage + 1)} page={currentPage}>
           <Grid container spacing={2}>
