@@ -1,8 +1,13 @@
 import { green, red, grey } from "@mui/material/colors"
 import axios, { AxiosResponse } from "axios"
+import { SxProps } from "@mui/system"
 import { Character, Episode, Info } from "../types/rickAndMortyApiInterfaces"
 
 type AxiosFetchCall<T, V> = (arg: V) => Promise<AxiosResponse<T>>
+
+export interface CustomStyles {
+  [key: string]: SxProps
+}
 
 export const getEpisodesNumber: (episodes: string[]) => number[] = (episodes) =>
   episodes.map((episode) => parseInt(episode.substring(episode.lastIndexOf("/") + 1)))

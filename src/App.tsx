@@ -4,17 +4,40 @@ import Container from "@mui/material/Container"
 import Fab from "@mui/material/Fab"
 import Grid from "@mui/material/Grid"
 import blueGrey from "@mui/material/colors/blueGrey"
+import orange from "@mui/material/colors/orange"
 import ArrowUpward from "@mui/icons-material/ArrowUpward"
 import { Character } from "./types/rickAndMortyApiInterfaces"
 import CharacterCard from "./components/CharacterCard"
 import InfiteScroll from "./components/InfiteScroll"
 import CharacterDialog from "./components/CharacterDialog"
 import logo from "./images/logo.png"
-import { getCharacters, scrollToTop } from "./utils"
+import { CustomStyles, getCharacters, scrollToTop } from "./utils"
 
 interface DialogStatus {
   selectedValue: Character | undefined
   isOpen: boolean
+}
+
+const styles: CustomStyles = {
+  Header: {
+    backgroundColor: blueGrey["900"],
+    display: "flex",
+    height: "75px",
+    justifyContent: "center",
+    position: "fixed",
+    top: 0,
+    width: "100%",
+    zIndex: 10,
+
+    img: { height: "75px" },
+  },
+  GoTopButton: {
+    backgroundColor: orange[900],
+    bottom: "24px",
+    color: "white",
+    position: "fixed",
+    right: "24px",
+  },
 }
 
 const App: React.FC<{}> = () => {
@@ -53,36 +76,15 @@ const App: React.FC<{}> = () => {
 
   return (
     <>
-      <Box
-        sx={{
-          backgroundColor: blueGrey["900"],
-          display: "flex",
-          height: "75px",
-          justifyContent: "center",
-          position: "fixed",
-          top: 0,
-          width: "100%",
-          zIndex: 10,
-        }}
-      >
-        <img src={logo} alt='Rick and Morty logo' style={{ height: "75px" }} />
+      <Box sx={styles.Header}>
+        <img src={logo} alt='Rick and Morty logo' />
       </Box>
       <Container maxWidth='xl' sx={{ backgroundColor: blueGrey["900"], paddingTop: "80px" }}>
         <InfiteScroll handler={() => setCurrentPage(currentPage + 1)} page={currentPage}>
           <Grid container spacing={2}>
             {memoizedCards}
           </Grid>
-          <Fab
-            color='primary'
-            aria-label='go to top'
-            title='Go to top'
-            onClick={() => scrollToTop()}
-            sx={{
-              position: "fixed",
-              bottom: "24px",
-              right: "24px",
-            }}
-          >
+          <Fab aria-label='go to top' title='Go to top' onClick={() => scrollToTop()} sx={styles.GoTopButton}>
             <ArrowUpward />
           </Fab>
           <CharacterDialog

@@ -1,5 +1,4 @@
 import { FC, memo, useEffect, useState } from "react"
-import { SxProps } from "@mui/material"
 import Typography from "@mui/material/Typography"
 import Dialog from "@mui/material/Dialog"
 import DialogContent from "@mui/material/DialogContent"
@@ -9,11 +8,7 @@ import Chip from "@mui/material/Chip"
 import { blueGrey } from "@mui/material/colors"
 import { Character, Episode } from "../types/rickAndMortyApiInterfaces"
 import CharacterStatusChip from "./CharacterStatusChip"
-import { getCharacterEpisodes, getEpisodesNumber } from "../utils"
-
-interface CustomStyles {
-  [key: string]: SxProps
-}
+import { getCharacterEpisodes, getEpisodesNumber, CustomStyles } from "../utils"
 
 const styles: CustomStyles = {
   CharacterDialog: {

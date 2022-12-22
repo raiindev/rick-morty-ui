@@ -4,14 +4,10 @@ import CardContent from "@mui/material/CardContent"
 import CardMedia from "@mui/material/CardMedia"
 import Grid from "@mui/material/Grid"
 import Typography from "@mui/material/Typography"
-import { SxProps } from "@mui/system"
 import { Character } from "../types/rickAndMortyApiInterfaces"
 import { blueGrey, grey } from "@mui/material/colors"
 import CharacterStatusChip from "./CharacterStatusChip"
-
-interface CustomStyles {
-  [key: string]: SxProps<{}>
-}
+import { CustomStyles } from "../utils"
 
 const styles: CustomStyles = {
   CardContainer: {
