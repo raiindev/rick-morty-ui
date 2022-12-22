@@ -30,7 +30,6 @@ const App: React.FC<{}> = () => {
   })
 
   const handleCharacterCardClick = useCallback((charInfos: Character) => {
-    console.log("openDialog")
     setDialogStatus({ selectedValue: charInfos, isOpen: true })
   }, [])
 
@@ -54,7 +53,7 @@ const App: React.FC<{}> = () => {
     return characters.map((charInfos) => (
       <CharacterCard {...charInfos} key={charInfos.id} openCharacterDialog={handleCharacterCardClick} />
     ))
-  }, [characters])
+  }, [handleCharacterCardClick, characters])
 
   return (
     <InfiteScroll handler={() => setCurrentPage(currentPage + 1)} page={currentPage}>
