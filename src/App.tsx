@@ -1,24 +1,17 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react"
-import axios, { AxiosResponse } from "axios"
 import { Container, Fab, Grid } from "@mui/material"
 import ArrowUpward from "@mui/icons-material/ArrowUpward"
-import { Character, Info } from "./types/rickAndMortyApiInterfaces"
+import { Character } from "./types/rickAndMortyApiInterfaces"
 import CharacterCard from "./components/CharacterCard"
 import InfiteScroll from "./components/InfiteScroll"
 import CharacterDialog from "./components/CharacterDialog"
 import { blueGrey } from "@mui/material/colors"
 import logo from "./images/logo.png"
+import { getCharacters, scrollToTop } from "./utils"
 
 interface DialogStatus {
   selectedValue: Character | undefined
   isOpen: boolean
-}
-
-const getCharacters: (page: number) => Promise<AxiosResponse<Info<Character[]>>> = async (page) =>
-  await axios.get<Info<Character[]>>(`https://rickandmortyapi.com/api/character/?page=${page}`)
-
-const scrollToTop: () => void = () => {
-  window.scrollTo(0, 0)
 }
 
 const App: React.FC<{}> = () => {

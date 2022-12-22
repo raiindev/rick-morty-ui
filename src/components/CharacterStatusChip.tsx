@@ -1,20 +1,9 @@
 import { FC } from "react"
 import Chip from "@mui/material/Chip"
-import { green, grey, red } from "@mui/material/colors"
 import { SxProps } from "@mui/material"
 import { Character } from "../types/rickAndMortyApiInterfaces"
 import { CSSProperties } from "@mui/styled-engine"
-
-const getStatusColor: (status: string) => string = (status) => {
-  switch (status) {
-    case "Alive":
-      return green["700"]
-    case "Dead":
-      return red["400"]
-    default:
-      return grey["500"]
-  }
-}
+import { getStatusColor, getStatusLabel } from "../utils"
 
 const getChipStyle: (status: string, overrideStyles: CSSProperties) => SxProps = (status, overrideStyles) => ({
   ...overrideStyles,
@@ -25,8 +14,6 @@ const getChipStyle: (status: string, overrideStyles: CSSProperties) => SxProps =
   fontWeight: 700,
   textTransform: "uppercase",
 })
-
-const getStatusLabel = (status: string) => (status === "Dead" ? "Deceased" : status)
 
 const CharacterStatusChip: FC<Pick<Character, "status"> & { overrideStyles?: CSSProperties }> = ({
   status,

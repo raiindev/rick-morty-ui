@@ -10,6 +10,7 @@ import Chip from "@mui/material/Chip"
 import { blueGrey } from "@mui/material/colors"
 import { Character, Episode, Info } from "../types/rickAndMortyApiInterfaces"
 import CharacterStatusChip from "./CharacterStatusChip"
+import { getCharacterEpisodes, getEpisodesNumber } from "../utils"
 
 interface CustomStyles {
   [key: string]: SxProps
@@ -61,13 +62,6 @@ export interface CharacterDialogProps {
   selectedValue: Character | undefined
   onClose: () => void
 }
-
-const getCharacterEpisodes: (characterEpisodes: number[]) => Promise<AxiosResponse<Episode[] | Episode>> = async (
-  characterEpisodes
-) => await axios.get<Episode[] | Episode>(`https://rickandmortyapi.com/api/episode/${characterEpisodes.toString()}`)
-
-const getEpisodesNumber = (episodes: string[]): number[] =>
-  episodes.map((episode) => parseInt(episode.substring(episode.lastIndexOf("/") + 1)))
 
 const CharacterDialog: FC<CharacterDialogProps> = memo(({ open, selectedValue, onClose }) => {
   const [episodes, setEpisodes] = useState<Pick<Episode, "id" | "episode" | "name">[] | never[]>([])
