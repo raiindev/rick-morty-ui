@@ -1,8 +1,9 @@
-import { FC, CSSProperties } from "react"
+import React, { FC, CSSProperties, Dispatch, SetStateAction, useState } from "react"
 import Box from "@mui/material/Box"
 import Container from "@mui/material/Container"
 import { SxProps } from "@mui/material"
 import Search from "@mui/icons-material/Search"
+import { useDebounce } from "../utils"
 
 const getHeaderStyle: (isVisible: string) => CSSProperties = (isVisible) => ({
   backgroundColor: "rgba(0, 0, 0, .9)",
@@ -15,6 +16,14 @@ const getHeaderStyle: (isVisible: string) => CSSProperties = (isVisible) => ({
   width: "100%",
   zIndex: 30,
 })
+
+const searchContainerStyle: SxProps = {
+  alignItems: "center",
+  display: "flex",
+  flexDirection: "column",
+  height: "100%",
+  justifyContent: "space-between",
+}
 
 const searchBoxStyle: SxProps = {
   alignItems: "center",
@@ -52,27 +61,22 @@ const searchBoxStyle: SxProps = {
   },
 }
 
-const Header: FC<{ isVisible: string }> = ({ isVisible }) => {
-  console.log(isVisible)
+const Header: FC<{ isVisible: string; onSearch: Dispatch<SetStateAction<string>> }> = ({ isVisible, onSearch }) => {
+  const [value, setValue] = useState("")
+
+  useDebounce(() => onSearch(value), [value], 500)
+
   return (
     <header style={getHeaderStyle(isVisible)}>
-      <Container
-        maxWidth='xl'
-        sx={{
-          alignItems: "center",
-          display: "flex",
-          flexDirection: "column",
-          height: "100%",
-          justifyContent: "space-between",
-        }}
-      >
+      <Container maxWidth='xl' sx={searchContainerStyle}>
         <img src={process.env.PUBLIC_URL + "/img/logo.webp"} height='200' alt='Rick and Morty logo' />
         <Box sx={searchBoxStyle}>
-          <input placeholder='Find a character' aria-label='ok' />
+          <input placeholder='Find a character' aria-label='ok' onChange={(e) => setValue(e.target.value)} />
           <Search />
         </Box>
       </Container>
     </header>
   )
 }
+
 export default Header

@@ -39,10 +39,11 @@ const styles: CustomStyles = {
 const App: React.FC<{}> = () => {
   const [isHeaderVisible, setIsHeaderVisible] = useState("full")
   const [currentPage, setCurrentPage] = useState(1)
+  const [searchFilter, setSearchFilter] = useState("")
 
   return (
     <>
-      <Header isVisible={isHeaderVisible} />
+      <Header isVisible={isHeaderVisible} onSearch={setSearchFilter} />
       <Container
         component='main'
         id='main-container'
@@ -58,7 +59,7 @@ const App: React.FC<{}> = () => {
             <Typography> List of characters</Typography>
             <hr />
           </Box>
-          <CharacterList page={currentPage} />
+          <CharacterList page={currentPage} searchFilter={searchFilter} />
           <Fab aria-label='go to top' title='Go to top' onClick={() => scrollToTop()} sx={styles.GoTopButton}>
             <ArrowUpward />
           </Fab>
