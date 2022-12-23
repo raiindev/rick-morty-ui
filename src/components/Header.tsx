@@ -1,15 +1,14 @@
 import { FC, CSSProperties } from "react"
 import Box from "@mui/material/Box"
 import Container from "@mui/material/Container"
-import { grey } from "@mui/material/colors"
 import { SxProps } from "@mui/material"
 import Search from "@mui/icons-material/Search"
 
-const getHeaderStyle: (isVisible: boolean) => CSSProperties = (isVisible) => ({
-  backgroundColor: "black",
-  height: "100px",
+const getHeaderStyle: (isVisible: string) => CSSProperties = (isVisible) => ({
+  backgroundColor: "rgba(0, 0, 0, .9)",
+  height: "300px",
   position: "fixed",
-  top: isVisible ? "0" : "-150px",
+  top: isVisible === "full" ? 0 : isVisible === "no" ? "-300px" : "-200px",
   transitionProperty: "all",
   transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
   transitionDuration: "500ms",
@@ -19,24 +18,33 @@ const getHeaderStyle: (isVisible: boolean) => CSSProperties = (isVisible) => ({
 
 const searchBoxStyle: SxProps = {
   alignItems: "center",
-  color: grey[200],
+  backgroundColor: "rgba(255, 255, 255, 0.5)",
+  borderRadius: "10px",
+  color: "white",
   display: "flex",
-  marginRight: "16px",
+  marginBottom: "24px",
+  position: "relative",
+  width: "100%",
 
   svg: {
     fontSize: "1.75rem",
     marginRight: "4px",
+    position: "absolute",
+    right: 4,
   },
 
   "& input": {
-    backgroundColor: grey[200],
+    backgroundColor: "transparent",
     border: 0,
-    borderRadius: "20px",
     fontFamily: "Montserrat, sans-serif",
     fontSize: "1.25rem",
-    height: "25px",
-    padding: "5px 8px",
-    width: "200px",
+    height: "100%",
+    padding: "16px 12px",
+    width: "100%",
+
+    "::placeholder": {
+      color: "white",
+    },
 
     ":focus": {
       outlineWidth: "thin",
@@ -44,19 +52,27 @@ const searchBoxStyle: SxProps = {
   },
 }
 
-const Header: FC<{ isVisible: boolean }> = ({ isVisible }) => (
-  <header style={getHeaderStyle(isVisible)}>
-    <Container
-      maxWidth='xl'
-      sx={{ alignItems: "center", display: "flex", height: "100%", justifyContent: "space-between" }}
-    >
-      <img src={process.env.PUBLIC_URL + "/img/logo.webp"} height='75' alt='Rick and Morty logo' />
-      <Box sx={searchBoxStyle}>
-        <Search />
-        <input placeholder='Search..' aria-label='ok' />
-      </Box>
-    </Container>
-  </header>
-)
-
+const Header: FC<{ isVisible: string }> = ({ isVisible }) => {
+  console.log(isVisible)
+  return (
+    <header style={getHeaderStyle(isVisible)}>
+      <Container
+        maxWidth='xl'
+        sx={{
+          alignItems: "center",
+          display: "flex",
+          flexDirection: "column",
+          height: "100%",
+          justifyContent: "space-between",
+        }}
+      >
+        <img src={process.env.PUBLIC_URL + "/img/logo.webp"} height='200' alt='Rick and Morty logo' />
+        <Box sx={searchBoxStyle}>
+          <input placeholder='Find a character' aria-label='ok' />
+          <Search />
+        </Box>
+      </Container>
+    </header>
+  )
+}
 export default Header

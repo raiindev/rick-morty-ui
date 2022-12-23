@@ -46,7 +46,7 @@ const styles: CustomStyles = {
     color: "white",
     display: "flex",
     flexDirection: "column",
-    height: "calc(100% - 32px)",
+    height: "100%",
     justifyContent: "flex-end",
     opacity: 0,
     position: "absolute",
@@ -62,7 +62,7 @@ const styles: CustomStyles = {
     marginBottom: "4px",
   },
   CardLocationValue: { fontSize: "1.25rem", fontWeight: "700", lineHeight: 1.1, marginBottom: "8px" },
-  CharacterName: { fontSize: "2rem", fontWeight: "600", lineHeight: 1.1, wordBreak: "break-word" },
+  CharacterName: { fontSize: "1.75rem", fontWeight: "600", lineHeight: 1.1, wordBreak: "break-word" },
   DetailsButton: {
     borderColor: "white",
     color: "white",

@@ -3,7 +3,7 @@ import { Dispatch, FC, ReactNode, SetStateAction, useEffect } from "react"
 const ScrollProvider: FC<{
   children: ReactNode
   handler: () => void
-  header: { visibility: boolean; setter: Dispatch<SetStateAction<boolean>> }
+  header: { visibility: string; setter: Dispatch<SetStateAction<string>> }
   page: number
 }> = ({ children, handler, header, page }) => {
   useEffect(() => {
@@ -17,7 +17,11 @@ const ScrollProvider: FC<{
       const direction = scrollY > lastScrollY ? "down" : "up"
 
       if (scrollY - lastScrollY > 10 || scrollY - lastScrollY < -10) {
-        header.setter(direction === "up")
+        if (scrollTop <= 300) {
+          header.setter("full")
+        } else {
+          header.setter(direction === "up" ? "semi" : "no")
+        }
       }
 
       lastScrollY = scrollY > 0 ? scrollY : 0
