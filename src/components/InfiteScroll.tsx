@@ -1,6 +1,11 @@
-import { FC, ReactNode, useEffect } from "react"
+import { Dispatch, FC, ReactNode, SetStateAction, useEffect } from "react"
 
-const InfiteScroll: FC<{ children: ReactNode; handler: () => void; page: number }> = ({ children, handler, page }) => {
+const InfiteScroll: FC<{
+  children: ReactNode
+  handler: () => void
+  headerHandler: Dispatch<SetStateAction<boolean>>
+  page: number
+}> = ({ children, handler, headerHandler, page }) => {
   /* Infinite scrolling add*/
   useEffect(() => {
     /*Infinite scrolling handler*/
@@ -8,6 +13,7 @@ const InfiteScroll: FC<{ children: ReactNode; handler: () => void; page: number 
       const scrollTop = document.documentElement.scrollTop
       const scrollHeight = document.documentElement.scrollHeight
       const clientHeight = document.documentElement.clientHeight
+
       if (scrollTop + clientHeight >= scrollHeight - 400) {
         handler()
       }

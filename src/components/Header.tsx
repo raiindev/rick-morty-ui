@@ -1,7 +1,6 @@
 import { FC } from "react"
-import logo from "../images/logo.webp"
 
-const Header: FC<{}> = () => {
+const Header: FC<{ isVisible: boolean }> = (isVisible) => {
   return (
     <header
       style={{
@@ -15,7 +14,7 @@ const Header: FC<{}> = () => {
         zIndex: 10,
       }}
     >
-      <img src={logo} alt='Rick and Morty logo' />
+      <img src={process.env.PUBLIC_URL + "/img/logo.webp"} alt='Rick and Morty logo' />
     </header>
   )
 }

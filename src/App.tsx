@@ -24,6 +24,7 @@ const App: React.FC<{}> = () => {
   const [characters, setCharacters] = useState<Character[] | never[]>([])
   const [currentPage, setCurrentPage] = useState(1)
   const [isLoading, setIsLoading] = useState(true)
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true)
 
   useEffect(() => {
     getCharacters(currentPage)
@@ -37,14 +38,18 @@ const App: React.FC<{}> = () => {
 
   return (
     <>
-      <Header />
+      <Header isVisible={isHeaderVisible} />
       <Container
         component='main'
         id='main-container'
         maxWidth='xl'
         sx={{ backgroundColor: "transparent", paddingTop: "80px" }}
       >
-        <InfiteScroll handler={() => setCurrentPage(currentPage + 1)} page={currentPage}>
+        <InfiteScroll
+          handler={() => setCurrentPage(currentPage + 1)}
+          page={currentPage}
+          headerHandler={setIsHeaderVisible}
+        >
           <CharacterList characters={characters} loading={isLoading} />
           <Fab aria-label='go to top' title='Go to top' onClick={() => scrollToTop()} sx={styles.GoTopButton}>
             <ArrowUpward />
