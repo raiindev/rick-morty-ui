@@ -22,7 +22,7 @@ const ScrollProvider: FC<{
 
       lastScrollY = scrollY > 0 ? scrollY : 0
 
-      if (scrollTop + clientHeight >= scrollHeight - 400) {
+      if (scrollTop + clientHeight >= scrollHeight - 150) {
         handler()
       }
     }

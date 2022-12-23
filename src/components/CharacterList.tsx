@@ -1,20 +1,33 @@
-import React, { FC, memo, useCallback, useMemo, useState } from "react"
+import React, { FC, memo, useCallback, useEffect, useMemo, useState } from "react"
 import Grid from "@mui/material/Grid"
 import CharacterCard from "./CharacterCard"
 import CharacterDialog from "./CharacterDialog"
 import { Character } from "../types/rickAndMortyApiInterfaces"
 import CharacterCardSkeleton from "./CharacterCardSkeleton"
+import { getCharacters } from "../utils"
 
 interface DialogStatus {
   selectedValue: Character | undefined
   isOpen: boolean
 }
 
-const CharacterList: FC<{ characters: Character[]; loading: boolean }> = memo(({ characters, loading }) => {
+const CharacterList: FC<{ page: number }> = memo(({ page }) => {
+  const [characters, setCharacters] = useState<Character[] | never[]>([])
+  const [isLoading, setIsLoading] = useState(true)
   const [dialogStatus, setDialogStatus] = useState<DialogStatus>({
     selectedValue: undefined,
     isOpen: false,
   })
+
+  useEffect(() => {
+    getCharacters(page)
+      .then(({ data }) => {
+        const results = data.results || []
+        setCharacters((prevState) => (page !== 1 ? [...prevState, ...results] : results))
+      })
+      .catch(console.error)
+      .finally(() => setIsLoading(false))
+  }, [page])
 
   const handleCharacterCardClick = useCallback((charInfos: Character) => {
     setDialogStatus({ selectedValue: charInfos, isOpen: true })
@@ -28,14 +41,14 @@ const CharacterList: FC<{ characters: Character[]; loading: boolean }> = memo(({
   }, [])
 
   const memoizedCards = useMemo(() => {
-    return (loading ? Array.from(new Array(12)) : characters).map((charInfos, index) =>
+    return (isLoading ? Array.from(new Array(12)) : characters).map((charInfos, index) =>
       charInfos ? (
         <CharacterCard {...charInfos} key={charInfos.id} openCharacterDialog={handleCharacterCardClick} />
       ) : (
         <CharacterCardSkeleton key={index} />
       )
     )
-  }, [loading, handleCharacterCardClick, characters])
+  }, [isLoading, handleCharacterCardClick, characters])
 
   return (
     <>
