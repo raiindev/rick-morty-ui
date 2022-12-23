@@ -7,7 +7,8 @@ import Box from "@mui/material/Box"
 import Chip from "@mui/material/Chip"
 import { blueGrey } from "@mui/material/colors"
 import { Character, Episode } from "../types/rickAndMortyApiInterfaces"
-import { getCharacterEpisodes, getEpisodesNumber, CustomStyles } from "../utils"
+import { getCharacterEpisodes, getEpisodesNumber, CustomStyles, getStatusColor } from "../utils"
+import CharacterStatus from "./CharacterStatus"
 
 const styles: CustomStyles = {
   CharacterDialog: {
@@ -91,7 +92,16 @@ const CharacterDialog: FC<CharacterDialogProps> = memo(({ open, selectedValue, o
     return (
       <Dialog onClose={handleClose} open={open}>
         <DialogContent sx={CharacterDialog}>
-          <Typography>{status}</Typography>
+          <CharacterStatus
+            status={status}
+            labelStyle={{ fontSize: "1rem" }}
+            containerStyle={{
+              alignSelf: "flex-start",
+              borderRadius: "20px",
+              border: `1px solid ${getStatusColor(status)}`,
+              padding: "4px 12px",
+            }}
+          />
           <img src={image} alt={`${name}`} loading='lazy' />
           <DialogTitle sx={CharacterDialogTitle}>{selectedValue.name}</DialogTitle>
           <Typography sx={{ paddingBottom: "16px" }}>
