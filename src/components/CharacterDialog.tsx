@@ -1,19 +1,19 @@
 import { FC, memo, useEffect, useState } from "react"
+import { Theme, useTheme } from "@mui/material/styles"
 import Typography from "@mui/material/Typography"
 import Dialog from "@mui/material/Dialog"
 import DialogContent from "@mui/material/DialogContent"
 import DialogTitle from "@mui/material/DialogTitle"
 import Box from "@mui/material/Box"
 import Chip from "@mui/material/Chip"
-import { blueGrey } from "@mui/material/colors"
 import { Character, Episode } from "../types/rickAndMortyApiInterfaces"
 import { getCharacterEpisodes, getEpisodesNumber, CustomStyles, getStatusColor } from "../utils"
 import CharacterStatus from "./CharacterStatus"
 
-const styles: CustomStyles = {
+const getStyles: (theme: Theme) => CustomStyles = (theme) => ({
   CharacterDialog: {
     alignItems: "center",
-    backgroundColor: `${blueGrey["700"]} !important`,
+    backgroundColor: "#131313 !important",
     color: "white",
     display: "flex",
     flexDirection: "column",
@@ -26,13 +26,40 @@ const styles: CustomStyles = {
   CharacterDialogTitle: {
     fontSize: "2rem",
     fontWeight: 700,
-    paddingBottom: 0,
+    padding: "16px 0 0 0",
+
+    [theme.breakpoints.down("sm")]: {
+      fontSize: "1.5rem",
+    },
   },
   CharacterDialogChipsContainer: {},
   CharacterDialogChip: {
     color: "white",
     borderWidth: "2px",
     margin: "0 6px 12px 0",
+  },
+  CharacterDialogLocation: {
+    alignItems: "baseline",
+    display: "flex",
+    justifyContent: "center",
+    marginBottom: "16px",
+
+    "p:first-child": {
+      marginRight: "5px",
+    },
+
+    "p:last-child": {
+      fontSize: "1.25rem",
+      fontWeight: 700,
+    },
+
+    [theme.breakpoints.down("sm")]: {
+      alignItems: "center",
+      flexDirection: "column",
+      "p:first-child": {
+        margin: 0,
+      },
+    },
   },
   CharacterDialogEpisodes: {
     textAlign: "center",
@@ -49,7 +76,7 @@ const styles: CustomStyles = {
       fontSize: ".95rem",
     },
   },
-}
+})
 
 export interface CharacterDialogProps {
   open: boolean
@@ -58,6 +85,7 @@ export interface CharacterDialogProps {
 }
 
 const CharacterDialog: FC<CharacterDialogProps> = memo(({ open, selectedValue, onClose }) => {
+  const theme = useTheme()
   const [episodes, setEpisodes] = useState<Pick<Episode, "id" | "episode" | "name">[] | never[]>([])
 
   useEffect(() => {
@@ -82,8 +110,9 @@ const CharacterDialog: FC<CharacterDialogProps> = memo(({ open, selectedValue, o
       CharacterDialogTitle,
       CharacterDialogChips,
       CharacterDialogChip,
+      CharacterDialogLocation,
       CharacterDialogEpisodes,
-    } = styles
+    } = getStyles(theme)
 
     const handleClose = () => {
       onClose()
@@ -99,14 +128,16 @@ const CharacterDialog: FC<CharacterDialogProps> = memo(({ open, selectedValue, o
               alignSelf: "flex-start",
               borderRadius: "20px",
               border: `1px solid ${getStatusColor(status)}`,
+              marginBottom: "8px",
               padding: "4px 12px",
             }}
           />
           <img src={image} alt={`${name}`} loading='lazy' />
           <DialogTitle sx={CharacterDialogTitle}>{selectedValue.name}</DialogTitle>
-          <Typography sx={{ paddingBottom: "16px" }}>
-            Last seen in: <b>{location.name}</b>
-          </Typography>
+          <Box sx={CharacterDialogLocation}>
+            <Typography>Last seen in:</Typography>
+            <Typography>{location.name}</Typography>
+          </Box>
           <Box sx={CharacterDialogChips}>
             <Chip sx={CharacterDialogChip} label={species} variant='outlined' />
             <Chip sx={CharacterDialogChip} label={gender} variant='outlined' />

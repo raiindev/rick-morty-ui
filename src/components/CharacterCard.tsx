@@ -5,19 +5,19 @@ import CardMedia from "@mui/material/CardMedia"
 import Grid from "@mui/material/Grid"
 import Typography from "@mui/material/Typography"
 import { Character } from "../types/rickAndMortyApiInterfaces"
-import { blueGrey, grey } from "@mui/material/colors"
+import { grey } from "@mui/material/colors"
 import { CustomStyles } from "../utils"
 import CharacterStatus from "./CharacterStatus"
+import { Button } from "@mui/material"
 
 const styles: CustomStyles = {
   CardContainer: {
-    borderRadius: "4px",
-    cursor: "pointer",
+    border: "1px solid white",
     minWidth: 275,
     position: "relative",
     transition: "all .3s ease-in-out",
 
-    "&:hover": {
+    "&:hover, &:active": {
       boxShadow: 5,
       transform: "translateY(5px)",
 
@@ -30,7 +30,6 @@ const styles: CustomStyles = {
 
     "&:before": {
       backgroundColor: "rgba(0, 0, 0, 0.7)",
-      borderRadius: "4px",
       content: '""',
       display: "block",
       height: "100%",
@@ -62,8 +61,19 @@ const styles: CustomStyles = {
     lineHeight: 1.1,
     marginBottom: "4px",
   },
-  CardLocationValue: { fontSize: "1.5rem", fontWeight: "700", lineHeight: 1.1 },
-  CharacterName: { fontSize: "2rem", fontWeight: "600", lineHeight: 1.1 },
+  CardLocationValue: { fontSize: "1.25rem", fontWeight: "700", lineHeight: 1.1, marginBottom: "8px" },
+  CharacterName: { fontSize: "2rem", fontWeight: "600", lineHeight: 1.1, wordBreak: "break-word" },
+  DetailsButton: {
+    borderColor: "white",
+    color: "white",
+    fontWeight: 700,
+    textTransform: "capitalize",
+    width: "fit-content",
+
+    "&:hover, &:active": {
+      borderColor: "white",
+    },
+  },
 }
 
 const CharacterIntro: FC<Pick<Character, "name" | "status" | "species">> = ({ name, status, species }) => (
@@ -79,11 +89,11 @@ const CharacterIntro: FC<Pick<Character, "name" | "status" | "species">> = ({ na
 
 const CharacterCard: FC<Character & { openCharacterDialog: any }> = memo((props) => {
   const { image, location, name, openCharacterDialog, species, status } = props
-  const { CardContainer, CardInfoContainer, CardLocationLabel, CardLocationValue } = styles
+  const { CardContainer, CardInfoContainer, CardLocationLabel, CardLocationValue, DetailsButton } = styles
 
   return (
-    <Grid item xs={12} sm={12} md={6} xl={3} role='listitem'>
-      <Card sx={CardContainer} onClick={() => openCharacterDialog(props)} title='Click to see more details'>
+    <Grid item xs={12} sm={6} md={4} xl={3} role='listitem'>
+      <Card sx={CardContainer}>
         <CardMedia component='img' image={image} alt={name} loading='lazy' />
         <CardContent sx={CardInfoContainer}>
           <CharacterIntro name={name} status={status} species={species} />
@@ -91,6 +101,14 @@ const CharacterCard: FC<Character & { openCharacterDialog: any }> = memo((props)
           <Typography component='span' sx={CardLocationValue}>
             {location.name}
           </Typography>
+          <Button
+            sx={DetailsButton}
+            variant='outlined'
+            onClick={() => openCharacterDialog(props)}
+            title='Click to see more details'
+          >
+            More details
+          </Button>
         </CardContent>
       </Card>
     </Grid>
