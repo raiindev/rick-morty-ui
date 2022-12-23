@@ -3,13 +3,14 @@ import Grid from "@mui/material/Grid"
 import CharacterCard from "./CharacterCard"
 import CharacterDialog from "./CharacterDialog"
 import { Character } from "../types/rickAndMortyApiInterfaces"
+import CharacterCardSkeleton from "./CharacterCardSkeleton"
 
 interface DialogStatus {
   selectedValue: Character | undefined
   isOpen: boolean
 }
 
-const CharacterList: FC<{ characters: Character[] }> = memo(({ characters }) => {
+const CharacterList: FC<{ characters: Character[]; loading: boolean }> = memo(({ characters, loading }) => {
   const [dialogStatus, setDialogStatus] = useState<DialogStatus>({
     selectedValue: undefined,
     isOpen: false,
@@ -27,10 +28,14 @@ const CharacterList: FC<{ characters: Character[] }> = memo(({ characters }) => 
   }, [])
 
   const memoizedCards = useMemo(() => {
-    return characters.map((charInfos) => (
-      <CharacterCard {...charInfos} key={charInfos.id} openCharacterDialog={handleCharacterCardClick} />
-    ))
-  }, [handleCharacterCardClick, characters])
+    return (loading ? Array.from(new Array(12)) : characters).map((charInfos, index) =>
+      charInfos ? (
+        <CharacterCard {...charInfos} key={charInfos.id} openCharacterDialog={handleCharacterCardClick} />
+      ) : (
+        <CharacterCardSkeleton key={index} />
+      )
+    )
+  }, [loading, handleCharacterCardClick, characters])
 
   return (
     <>

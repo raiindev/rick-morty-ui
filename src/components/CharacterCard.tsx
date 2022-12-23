@@ -6,8 +6,8 @@ import Grid from "@mui/material/Grid"
 import Typography from "@mui/material/Typography"
 import { Character } from "../types/rickAndMortyApiInterfaces"
 import { blueGrey, grey } from "@mui/material/colors"
-import CharacterStatusChip from "./CharacterStatusChip"
 import { CustomStyles } from "../utils"
+import CharacterStatus from "./CharacterStatus"
 
 const styles: CustomStyles = {
   CardContainer: {
@@ -47,41 +47,27 @@ const styles: CustomStyles = {
   },
   CardLocationLabel: {
     color: grey[300],
-    fontSize: ".95rem",
+    fontSize: ".75rem",
     fontWeight: "500",
     lineHeight: 1.1,
     marginBottom: "4px",
     marginTop: "auto",
   },
-  CardLocationValue: { fontSize: "1.2rem", fontWeight: "700", lineHeight: 1.1 },
+  CardLocationValue: { fontSize: "1.1rem", fontWeight: "700", lineHeight: 1.1 },
+  CharacterName: { fontSize: "1.25rem", fontWeight: "600", lineHeight: 1.1 },
 }
 
-const CharacterIntro: FC<Pick<Character, "name" | "status">> = ({ name, status }) => (
+const CharacterIntro: FC<Pick<Character, "name" | "status" | "species">> = ({ name, status, species }) => (
   <div aria-label='character-intro' style={{ marginBottom: "4px", position: "relative" }}>
-    <Typography sx={{ fontSize: "1.25rem", fontWeight: "600", lineHeight: 1.1, maxWidth: "60%" }}>{name}</Typography>
-    <CharacterStatusChip
-      status={status}
-      overrideStyles={{
-        position: "absolute",
-        top: 0,
-        right: 0,
-      }}
-    />
+    <Typography sx={styles.CharacterName}>{name}</Typography>
+    <CharacterStatus status={status} label={(status) => `${status} - ${species}`} />
   </div>
 )
 
 const CharacterCard: FC<Character & { openCharacterDialog: any }> = memo((props) => {
   const { image, location, name, openCharacterDialog, species, status } = props
-  const {
-    CardContainer,
-    CardImage,
-    CardInfoContainer,
-    CardSpeciesLabel,
-    CardSpeciesValue,
-    CardLocationLabel,
-    CardLocationValue,
-    CharacterCardContent,
-  } = styles
+  const { CardContainer, CardImage, CardInfoContainer, CardLocationLabel, CardLocationValue, CharacterCardContent } =
+    styles
 
   return (
     <Grid item xs={12} sm={12} md={6} xl={4} role='listitem'>
@@ -89,9 +75,7 @@ const CharacterCard: FC<Character & { openCharacterDialog: any }> = memo((props)
         <CardContent sx={CharacterCardContent}>
           <CardMedia component='img' image={image} alt={name} sx={CardImage} loading='lazy' />
           <CardContent sx={CardInfoContainer}>
-            <CharacterIntro name={name} status={status} />
-            <Typography sx={CardSpeciesLabel}>Species:</Typography>
-            <Typography sx={CardSpeciesValue}>{species}</Typography>
+            <CharacterIntro name={name} status={status} species={species} />
             <Typography sx={CardLocationLabel}>Last known location:</Typography>
             <Typography component='span' sx={CardLocationValue}>
               {location.name}

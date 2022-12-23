@@ -12,7 +12,7 @@ import CharacterList from "./components/CharacterList"
 
 const styles: CustomStyles = {
   Header: {
-    backgroundColor: blueGrey["900"],
+    backgroundColor: blueGrey[900],
     display: "flex",
     height: "75px",
     justifyContent: "center",
@@ -35,6 +35,7 @@ const styles: CustomStyles = {
 const App: React.FC<{}> = () => {
   const [characters, setCharacters] = useState<Character[] | never[]>([])
   const [currentPage, setCurrentPage] = useState(1)
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     getCharacters(currentPage)
@@ -43,6 +44,7 @@ const App: React.FC<{}> = () => {
         setCharacters((prevState) => (currentPage !== 1 ? [...prevState, ...results] : results))
       })
       .catch(console.error)
+      .finally(() => setIsLoading(false))
   }, [currentPage])
 
   return (
@@ -52,7 +54,7 @@ const App: React.FC<{}> = () => {
       </Box>
       <Container maxWidth='xl' sx={{ backgroundColor: blueGrey["900"], paddingTop: "80px" }}>
         <InfiteScroll handler={() => setCurrentPage(currentPage + 1)} page={currentPage}>
-          <CharacterList characters={characters} />
+          <CharacterList characters={characters} loading={isLoading} />
           <Fab aria-label='go to top' title='Go to top' onClick={() => scrollToTop()} sx={styles.GoTopButton}>
             <ArrowUpward />
           </Fab>
