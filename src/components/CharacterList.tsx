@@ -7,14 +7,26 @@ import { Character } from "../types/rickAndMortyApiInterfaces"
 import CharacterCardSkeleton from "./CharacterCardSkeleton"
 import { getCharacters } from "../utils"
 import { AxiosError } from "axios"
+import InfiniteScrollProvider from "./InfiniteScrollProvider"
+import { memoryUsage } from "process"
 
 interface DialogStatus {
   selectedValue: Character | undefined
   isOpen: boolean
 }
 
-const CharacterList: FC<{ page: number; searchFilter: string }> = memo(({ page, searchFilter }) => {
-  const [characters, setCharacters] = useState<Character[] | never[]>([])
+const CharacterList: FC<{
+  searchFilters: { currentPage: number; searchString: string }
+  onScrollCallBackFn: () => void
+}> = memo(({ searchFilters, onScrollCallBackFn }) => {
+  const { currentPage, searchString } = searchFilters
+  const [charactersData, setCharactersData] = useState<{
+    characters: Character[] | never[]
+    totalPages: number
+  }>({
+    characters: [],
+    totalPages: 0,
+  })
   const [isLoading, setIsLoading] = useState(true)
   const [dialogStatus, setDialogStatus] = useState<DialogStatus>({
     selectedValue: undefined,
@@ -22,18 +34,24 @@ const CharacterList: FC<{ page: number; searchFilter: string }> = memo(({ page, 
   })
 
   useEffect(() => {
-    getCharacters(page, searchFilter)
+    setIsLoading(true)
+    getCharacters(currentPage, searchString)
       .then(({ data }) => {
         const results = data.results || []
-        setCharacters((prevState) => (page !== 1 ? [...prevState, ...results] : results))
+        const totalPages = data.info?.pages || 0
+
+        setCharactersData((prevState) => ({
+          characters: currentPage !== 1 ? [...prevState.characters, ...results] : results,
+          totalPages: totalPages,
+        }))
       })
       .catch((error: AxiosError<{ error: string }>) => {
-        if (error.response?.data?.error === "There is nothing here") {
-          setCharacters([])
+        if (currentPage === 1 && searchString !== "" && error.response?.data?.error === "There is nothing here") {
+          setCharactersData({ characters: [], totalPages: 0 })
         }
       })
       .finally(() => setIsLoading(false))
-  }, [page, searchFilter])
+  }, [currentPage, searchString])
 
   const handleCharacterCardClick = useCallback((charInfos: Character) => {
     setDialogStatus({ selectedValue: charInfos, isOpen: true })
@@ -46,33 +64,42 @@ const CharacterList: FC<{ page: number; searchFilter: string }> = memo(({ page, 
     })
   }, [])
 
+  const noResultsComponent = (
+    <Grid item xs={12} sx={{ textAlign: "center" }}>
+      <Typography sx={{ color: "white", fontSize: "3rem" }}>No results</Typography>
+    </Grid>
+  )
+
   const memoizedCards = useMemo(() => {
-    return searchFilter.length && characters.length === 0 ? (
-      <Grid item xs={12} sx={{ textAlign: "center" }}>
-        <Typography sx={{ color: "white", fontSize: "3rem" }}>No results</Typography>
-      </Grid>
-    ) : (
-      (isLoading ? Array.from(new Array(12)) : characters).map((charInfos, index) =>
-        charInfos ? (
-          <CharacterCard {...charInfos} key={charInfos.id} openCharacterDialog={handleCharacterCardClick} />
-        ) : (
-          <CharacterCardSkeleton key={index} />
-        )
+    const charactersArray = isLoading
+      ? [...charactersData.characters, ...Array.from(new Array(12))]
+      : charactersData.characters
+    return charactersArray.map((charInfos, index) =>
+      charInfos ? (
+        <CharacterCard
+          {...charInfos}
+          key={charInfos.id + charInfos.name}
+          openCharacterDialog={handleCharacterCardClick}
+        />
+      ) : (
+        <CharacterCardSkeleton key={index} />
       )
     )
-  }, [searchFilter, isLoading, handleCharacterCardClick, characters])
+  }, [charactersData.characters, handleCharacterCardClick, isLoading])
+
+  const hasMore = currentPage < charactersData.totalPages
 
   return (
-    <>
+    <InfiniteScrollProvider callback={onScrollCallBackFn} hasMore={hasMore}>
       <Grid container spacing={2} role='list'>
-        {memoizedCards}
+        {charactersData.characters.length ? memoizedCards : noResultsComponent}
       </Grid>
       <CharacterDialog
         open={dialogStatus.isOpen}
         selectedValue={dialogStatus.selectedValue}
         onClose={handleDialogClose}
       />
-    </>
+    </InfiniteScrollProvider>
   )
 })
 

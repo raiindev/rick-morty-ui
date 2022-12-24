@@ -34,7 +34,7 @@ export const getCharacters: (page: number, searchFilter: string) => AxiosFetchCa
   searchFilter
 ) =>
   await axios.get<Info<Character[]>>(
-    `https://rickandmortyapi.com/api/character/?${searchFilter.length ? `name=${searchFilter}` : `page=${page}`}`
+    `https://rickandmortyapi.com/api/character/?page=${page}${searchFilter.length ? `&name=${searchFilter}` : ""}`
   )
 
 export const getCharacterEpisodes: (characterEpisodes: number[]) => AxiosFetchCall<Episode[] | Episode> = async (
@@ -51,4 +51,17 @@ export const useDebounce: (effect: () => void, deps: any, delay: number) => void
     return () => clearTimeout(handler)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [...(deps || []), delay])
+}
+
+export const throttle = (fn: () => void, delay: number) => {
+  let wait = false
+  return function () {
+    if (!wait) {
+      fn()
+      wait = true
+      setTimeout(function () {
+        wait = false
+      }, delay)
+    }
+  }
 }

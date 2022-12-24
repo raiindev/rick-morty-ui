@@ -1,4 +1,4 @@
-import React, { FC, CSSProperties, Dispatch, SetStateAction, useState } from "react"
+import React, { FC, CSSProperties, useEffect, useState, memo } from "react"
 import Box from "@mui/material/Box"
 import Container from "@mui/material/Container"
 import { SxProps } from "@mui/material"
@@ -61,13 +61,37 @@ const searchBoxStyle: SxProps = {
   },
 }
 
-const Header: FC<{ isVisible: string; onSearch: Dispatch<SetStateAction<string>> }> = ({ isVisible, onSearch }) => {
+const Header: FC<{ onSearch: (value: string) => void }> = memo(({ onSearch }) => {
+  const [isHeaderVisible, setIsHeaderVisible] = useState("full")
   const [value, setValue] = useState("")
+
+  useEffect(() => {
+    let lastScrollY = window.pageYOffset
+
+    const onScroll = () => {
+      const scrollY = window.pageYOffset
+      const scrollTop = document.documentElement.scrollTop
+      const direction = scrollY > lastScrollY ? "down" : "up"
+
+      if (scrollY - lastScrollY > 10 || scrollY - lastScrollY < -10) {
+        if (scrollTop <= 300) {
+          setIsHeaderVisible("full")
+        } else {
+          setIsHeaderVisible(direction === "up" ? "semi" : "no")
+        }
+      }
+
+      lastScrollY = scrollY > 0 ? scrollY : 0
+    }
+
+    window.addEventListener("scroll", onScroll)
+    return () => window.removeEventListener("scroll", onScroll)
+  }, [])
 
   useDebounce(() => onSearch(value), [value], 500)
 
   return (
-    <header style={getHeaderStyle(isVisible)}>
+    <header style={getHeaderStyle(isHeaderVisible)}>
       <Container maxWidth='xl' sx={searchContainerStyle}>
         <img src={process.env.PUBLIC_URL + "/img/logo.webp"} height='200' alt='Rick and Morty logo' />
         <Box sx={searchBoxStyle}>
@@ -77,6 +101,6 @@ const Header: FC<{ isVisible: string; onSearch: Dispatch<SetStateAction<string>>
       </Container>
     </header>
   )
-}
+})
 
 export default Header

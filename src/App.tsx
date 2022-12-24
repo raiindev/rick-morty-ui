@@ -1,11 +1,10 @@
-import React, { useState } from "react"
+import React, { useCallback, useState } from "react"
 import Container from "@mui/material/Container"
 import Fab from "@mui/material/Fab"
 import { orange } from "@mui/material/colors"
 import ArrowUpward from "@mui/icons-material/ArrowUpward"
 import Typography from "@mui/material/Typography"
 import Box from "@mui/material/Stack"
-import ScrollProvider from "./components/ScrollProvider"
 import { CustomStyles, scrollToTop } from "./utils"
 import CharacterList from "./components/CharacterList"
 import Header from "./components/Header"
@@ -37,33 +36,45 @@ const styles: CustomStyles = {
 }
 
 const App: React.FC<{}> = () => {
-  const [isHeaderVisible, setIsHeaderVisible] = useState("full")
-  const [currentPage, setCurrentPage] = useState(1)
-  const [searchFilter, setSearchFilter] = useState("")
+  const [searchFilters, setSearchFilters] = useState({
+    currentPage: 1,
+    searchString: "",
+  })
+
+  const handleOnSearch = useCallback(
+    (value: string) => {
+      if (value !== searchFilters.searchString) {
+        scrollToTop()
+        setSearchFilters({
+          searchString: value,
+          currentPage: 1,
+        })
+      }
+    },
+    [searchFilters.searchString]
+  )
+
+  const handleOnScroll = useCallback(() => {
+    setSearchFilters((prevState) => ({ ...prevState, currentPage: prevState.currentPage + 1 }))
+  }, [])
 
   return (
     <>
-      <Header isVisible={isHeaderVisible} onSearch={setSearchFilter} />
+      <Header onSearch={handleOnSearch} />
       <Container
         component='main'
         id='main-container'
         maxWidth='xl'
-        sx={{ backgroundColor: "transparent", marginTop: "310px" }}
+        sx={{ backgroundColor: "transparent", marginBottom: "50px", marginTop: "310px" }}
       >
-        <ScrollProvider
-          handler={() => setCurrentPage(currentPage + 1)}
-          page={currentPage}
-          header={{ visibility: isHeaderVisible, setter: setIsHeaderVisible }}
-        >
-          <Box direction='row' sx={styles.Divider}>
-            <Typography> List of characters</Typography>
-            <hr />
-          </Box>
-          <CharacterList page={currentPage} searchFilter={searchFilter} />
-          <Fab aria-label='go to top' title='Go to top' onClick={() => scrollToTop()} sx={styles.GoTopButton}>
-            <ArrowUpward />
-          </Fab>
-        </ScrollProvider>
+        <Box direction='row' sx={styles.Divider}>
+          <Typography> List of characters</Typography>
+          <hr />
+        </Box>
+        <CharacterList searchFilters={searchFilters} onScrollCallBackFn={handleOnScroll} />
+        <Fab aria-label='go to top' title='Go to top' onClick={() => scrollToTop()} sx={styles.GoTopButton}>
+          <ArrowUpward />
+        </Fab>
       </Container>
     </>
   )

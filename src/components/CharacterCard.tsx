@@ -1,4 +1,4 @@
-import { FC, memo } from "react"
+import { FC, memo, useState } from "react"
 import Card from "@mui/material/Card"
 import CardContent from "@mui/material/CardContent"
 import CardMedia from "@mui/material/CardMedia"
@@ -13,6 +13,7 @@ import { Button } from "@mui/material"
 const styles: CustomStyles = {
   CardContainer: {
     border: "1px solid white",
+    height: "100%",
     minWidth: 275,
     position: "relative",
     transition: "all .3s ease-in-out",
@@ -90,11 +91,19 @@ const CharacterIntro: FC<Pick<Character, "name" | "status" | "species">> = ({ na
 const CharacterCard: FC<Character & { openCharacterDialog: any }> = memo((props) => {
   const { image, location, name, openCharacterDialog, species, status } = props
   const { CardContainer, CardInfoContainer, CardLocationLabel, CardLocationValue, DetailsButton } = styles
+  const [isVisible, setIsVisible] = useState(false)
 
   return (
     <Grid item xs={12} sm={6} md={4} xl={3} role='listitem'>
-      <Card sx={CardContainer}>
-        <CardMedia component='img' image={image} alt={name} loading='lazy' />
+      <Card sx={{ ...CardContainer, visibility: isVisible ? "visible" : "hidden" }}>
+        <CardMedia
+          component='img'
+          image={image}
+          alt={name}
+          loading='lazy'
+          onLoad={() => setIsVisible(true)}
+          height='100%'
+        />
         <CardContent sx={CardInfoContainer}>
           <CharacterIntro name={name} status={status} species={species} />
           <Typography sx={CardLocationLabel}>Last known location:</Typography>
