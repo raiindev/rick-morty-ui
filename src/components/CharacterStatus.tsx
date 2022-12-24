@@ -23,17 +23,18 @@ const getDefaultStyles: (status: string) => { [key: string]: CSSProperties } = (
 
 const CharacterStatus: FC<{
   status: string
+  noLabel?: boolean
   getLabel?: (status: string) => string
   labelStyle?: CSSProperties
   dotStyle?: CSSProperties
   containerStyle?: CSSProperties
-}> = ({ containerStyle = {}, dotStyle = {}, getLabel, labelStyle = {}, status }) => {
+}> = ({ containerStyle = {}, dotStyle = {}, noLabel = false, getLabel, labelStyle = {}, status }) => {
   const { container, dot, label } = getDefaultStyles(status)
 
   return (
     <Box sx={{ ...container, ...containerStyle }}>
       <div style={{ ...dot, ...dotStyle }} />
-      <Typography sx={{ ...label, ...labelStyle }}>{getLabel ? getLabel(status) : status}</Typography>
+      {!noLabel && <Typography sx={{ ...label, ...labelStyle }}>{getLabel ? getLabel(status) : status}</Typography>}
     </Box>
   )
 }

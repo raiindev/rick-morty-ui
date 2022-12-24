@@ -4,10 +4,11 @@ import Container from "@mui/material/Container"
 import { SxProps } from "@mui/material"
 import Search from "@mui/icons-material/Search"
 import { useDebounce } from "../utils"
+import { Theme, useTheme } from "@mui/material/styles"
 
-const getHeaderStyle: (isVisible: string) => CSSProperties = (isVisible) => ({
+const getHeaderStyle: (isVisible: string, theme: Theme) => SxProps = (isVisible, theme) => ({
   backgroundColor: "rgba(0, 0, 0, .9)",
-  height: "300px",
+  height: "185px",
   position: "fixed",
   top: isVisible === "full" ? 0 : isVisible === "no" ? "-300px" : "-200px",
   transitionProperty: "all",
@@ -15,15 +16,27 @@ const getHeaderStyle: (isVisible: string) => CSSProperties = (isVisible) => ({
   transitionDuration: "500ms",
   width: "100%",
   zIndex: 30,
+
+  [theme.breakpoints.up("sm")]: {
+    height: "250px",
+  },
 })
 
-const searchContainerStyle: SxProps = {
+const getContainerStyle: (theme: Theme) => SxProps = (theme) => ({
   alignItems: "center",
   display: "flex",
   flexDirection: "column",
   height: "100%",
   justifyContent: "space-between",
-}
+
+  img: {
+    marginTop: "8px",
+    width: "300px",
+    [theme.breakpoints.up("sm")]: {
+      width: "500px",
+    },
+  },
+})
 
 const searchBoxStyle: SxProps = {
   alignItems: "center",
@@ -62,6 +75,7 @@ const searchBoxStyle: SxProps = {
 }
 
 const Header: FC<{ onSearch: (value: string) => void }> = memo(({ onSearch }) => {
+  const theme = useTheme()
   const [isHeaderVisible, setIsHeaderVisible] = useState("full")
   const [value, setValue] = useState("")
 
@@ -91,15 +105,15 @@ const Header: FC<{ onSearch: (value: string) => void }> = memo(({ onSearch }) =>
   useDebounce(() => onSearch(value), [value], 500)
 
   return (
-    <header style={getHeaderStyle(isHeaderVisible)}>
-      <Container maxWidth='xl' sx={searchContainerStyle}>
-        <img src={process.env.PUBLIC_URL + "/img/logo.webp"} height='200' alt='Rick and Morty logo' />
+    <Box component='header' sx={getHeaderStyle(isHeaderVisible, theme)}>
+      <Container maxWidth='xl' sx={getContainerStyle(theme)}>
+        <img src={process.env.PUBLIC_URL + "/img/logo.webp"} alt='Rick and Morty logo' />
         <Box sx={searchBoxStyle}>
           <input placeholder='Find a character' aria-label='ok' onChange={(e) => setValue(e.target.value)} />
           <Search />
         </Box>
       </Container>
-    </header>
+    </Box>
   )
 })
 

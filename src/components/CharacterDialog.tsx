@@ -8,25 +8,38 @@ import Box from "@mui/material/Box"
 import Chip from "@mui/material/Chip"
 import { Character, Episode } from "../types/rickAndMortyApiInterfaces"
 import { getCharacterEpisodes, getEpisodesNumber, CustomStyles, getStatusColor } from "../utils"
-import CharacterStatus from "./CharacterStatus"
 
 const getStyles: (theme: Theme) => CustomStyles = (theme) => ({
+  CharacterDialogContainer: {
+    "& div[role='dialog']": {
+      borderRadius: "10px",
+      overflowY: "visible",
+    },
+  },
   CharacterDialog: {
     alignItems: "center",
     backgroundColor: "#131313 !important",
+    border: "1px solid white",
+    borderRadius: "10px",
     color: "white",
     display: "flex",
     flexDirection: "column",
+    position: "relative",
+    overflowY: "visible",
+  },
+  CharacterDialogImage: {
+    position: "absolute",
+    top: "-25px",
 
-    img: {
+    ">img": {
       borderRadius: "50%",
-      width: "150px",
+      height: "150px",
     },
   },
   CharacterDialogTitle: {
     fontSize: "2rem",
     fontWeight: 700,
-    padding: "16px 0 0 0",
+    marginTop: "100px",
 
     [theme.breakpoints.down("sm")]: {
       fontSize: "1.5rem",
@@ -43,6 +56,7 @@ const getStyles: (theme: Theme) => CustomStyles = (theme) => ({
     display: "flex",
     justifyContent: "center",
     marginBottom: "16px",
+    textAlign: "center",
 
     "p:first-child": {
       marginRight: "5px",
@@ -106,7 +120,9 @@ const CharacterDialog: FC<CharacterDialogProps> = memo(({ open, selectedValue, o
   if (selectedValue) {
     const { gender, image, location, name, species, status } = selectedValue
     const {
+      CharacterDialogContainer,
       CharacterDialog,
+      CharacterDialogImage,
       CharacterDialogTitle,
       CharacterDialogChips,
       CharacterDialogChip,
@@ -119,26 +135,22 @@ const CharacterDialog: FC<CharacterDialogProps> = memo(({ open, selectedValue, o
     }
 
     return (
-      <Dialog onClose={handleClose} open={open}>
+      <Dialog onClose={handleClose} open={open} sx={CharacterDialogContainer}>
         <DialogContent sx={CharacterDialog}>
-          <CharacterStatus
-            status={status}
-            labelStyle={{ fontSize: "1rem" }}
-            containerStyle={{
-              alignSelf: "flex-start",
-              borderRadius: "20px",
-              border: `1px solid ${getStatusColor(status)}`,
-              marginBottom: "8px",
-              padding: "4px 12px",
-            }}
-          />
-          <img src={image} alt={`${name}`} loading='lazy' />
+          <Box sx={CharacterDialogImage}>
+            <img src={image} alt={`${name}`} loading='lazy' />
+          </Box>
           <DialogTitle sx={CharacterDialogTitle}>{selectedValue.name}</DialogTitle>
           <Box sx={CharacterDialogLocation}>
             <Typography>Last seen in:</Typography>
             <Typography>{location.name}</Typography>
           </Box>
           <Box sx={CharacterDialogChips}>
+            <Chip
+              sx={{ ...CharacterDialogChip, borderColor: getStatusColor(status) }}
+              label={status}
+              variant='outlined'
+            />
             <Chip sx={CharacterDialogChip} label={species} variant='outlined' />
             <Chip sx={CharacterDialogChip} label={gender} variant='outlined' />
           </Box>
