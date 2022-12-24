@@ -8,7 +8,6 @@ import CharacterCardSkeleton from "./CharacterCardSkeleton"
 import { getCharacters } from "../utils"
 import { AxiosError } from "axios"
 import InfiniteScrollProvider from "./InfiniteScrollProvider"
-import { memoryUsage } from "process"
 
 interface DialogStatus {
   selectedValue: Character | undefined
@@ -44,13 +43,16 @@ const CharacterList: FC<{
           characters: currentPage !== 1 ? [...prevState.characters, ...results] : results,
           totalPages: totalPages,
         }))
+        setIsLoading(false)
       })
       .catch((error: AxiosError<{ error: string }>) => {
+        setIsLoading(false)
         if (currentPage === 1 && searchString !== "" && error.response?.data?.error === "There is nothing here") {
           setCharactersData({ characters: [], totalPages: 0 })
         }
       })
-      .finally(() => setIsLoading(false))
+
+    // Not using finally due to known issue [https://github.com/testing-library/react-testing-library/issues/1051]
   }, [currentPage, searchString])
 
   const handleCharacterCardClick = useCallback((charInfos: Character) => {

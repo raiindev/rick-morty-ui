@@ -45,7 +45,9 @@ const getStyles: (theme: Theme) => CustomStyles = (theme) => ({
       fontSize: "1.5rem",
     },
   },
-  CharacterDialogChipsContainer: {},
+  CharacterDialogChipsContainer: {
+    display: "flex",
+  },
   CharacterDialogChip: {
     color: "white",
     borderWidth: "2px",
@@ -58,11 +60,11 @@ const getStyles: (theme: Theme) => CustomStyles = (theme) => ({
     marginBottom: "16px",
     textAlign: "center",
 
-    "p:first-child": {
+    "p:first-of-type": {
       marginRight: "5px",
     },
 
-    "p:last-child": {
+    "p:last-of-type": {
       fontSize: "1.25rem",
       fontWeight: 700,
     },
@@ -70,7 +72,7 @@ const getStyles: (theme: Theme) => CustomStyles = (theme) => ({
     [theme.breakpoints.down("sm")]: {
       alignItems: "center",
       flexDirection: "column",
-      "p:first-child": {
+      "p:first-of-type": {
         margin: 0,
       },
     },
@@ -124,7 +126,7 @@ const CharacterDialog: FC<CharacterDialogProps> = memo(({ open, selectedValue, o
       CharacterDialog,
       CharacterDialogImage,
       CharacterDialogTitle,
-      CharacterDialogChips,
+      CharacterDialogChipsContainer,
       CharacterDialogChip,
       CharacterDialogLocation,
       CharacterDialogEpisodes,
@@ -145,7 +147,7 @@ const CharacterDialog: FC<CharacterDialogProps> = memo(({ open, selectedValue, o
             <Typography>Last seen in:</Typography>
             <Typography>{location.name}</Typography>
           </Box>
-          <Box sx={CharacterDialogChips}>
+          <Box sx={CharacterDialogChipsContainer}>
             <Chip
               sx={{ ...CharacterDialogChip, borderColor: getStatusColor(status) }}
               label={status}
