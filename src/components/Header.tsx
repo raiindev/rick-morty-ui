@@ -58,6 +58,7 @@ const searchBoxStyle: SxProps = {
   "& input": {
     backgroundColor: "transparent",
     border: 0,
+    borderRadius: "10px",
     fontFamily: "Montserrat, sans-serif",
     fontSize: "1.25rem",
     height: "100%",
