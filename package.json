@@ -32,6 +32,16 @@
     "extends": [
       "react-app",
       "react-app/jest"
+    ],
+    "overrides": [
+      {
+        "extends": [
+          "plugin:cypress/recommended"
+        ],
+        "files": [
+          "cypress/**/*.js"
+        ]
+      }
     ]
   },
   "browserslist": {
@@ -47,12 +57,15 @@
     ]
   },
   "devDependencies": {
+    "@testing-library/cypress": "^9.0.0",
     "@typescript-eslint/eslint-plugin": "^5.47.0",
     "@typescript-eslint/parser": "^5.47.0",
+    "cypress": "^12.2.0",
     "eslint": "^8.2.0",
     "eslint-config-airbnb": "19.0.4",
     "eslint-config-airbnb-typescript": "^17.0.0",
     "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-cypress": "^2.12.1",
     "eslint-plugin-import": "^2.25.3",
     "eslint-plugin-jest": "^27.1.7",
     "eslint-plugin-jsx-a11y": "^6.5.1",
@@ -62,6 +75,8 @@
     "prettier": "^2.8.1"
   },
   "jest": {
-    "transformIgnorePatterns": ["node_modules/(?!axios)"]
+    "transformIgnorePatterns": [
+      "node_modules/(?!axios)"
+    ]
   }
 }
