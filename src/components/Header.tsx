@@ -114,7 +114,11 @@ const Header: FC<{ onSearch: (value: string) => void }> = memo(({ onSearch }) =>
       <Container maxWidth='xl' sx={HeaderContent}>
         <img src={process.env.PUBLIC_URL + "/img/logo.webp"} alt='Rick and Morty logo' />
         <Box sx={SearchBox}>
-          <input placeholder='Find a character' aria-label='ok' onChange={(e) => setValue(e.target.value)} />
+          <input
+            placeholder='Find a character'
+            aria-label='Find a character'
+            onChange={(e) => setValue(e.target.value)}
+          />
           <Search />
         </Box>
       </Container>

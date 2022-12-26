@@ -23,7 +23,7 @@ const CharacterList: FC<{
     characters: Character[] | never[]
     totalPages: number
   }>({
-    characters: [],
+    characters: Array.from(new Array(12)),
     totalPages: 0,
   })
   const [isLoading, setIsLoading] = useState(true)
@@ -93,8 +93,8 @@ const CharacterList: FC<{
 
   return (
     <InfiniteScrollProvider callback={onScrollCallBackFn} hasMore={hasMore}>
-      <Grid container spacing={2} role='list'>
-        {charactersData.characters.length ? memoizedCards : noResultsComponent}
+      <Grid className='characters-list' container component='ul' spacing={2} sx={{ listStyle: "none", padding: 0 }}>
+        {searchString !== "" && !charactersData.characters.length ? noResultsComponent : memoizedCards}
       </Grid>
       <CharacterDialog
         open={dialogStatus.isOpen}

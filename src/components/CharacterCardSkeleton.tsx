@@ -4,7 +4,7 @@ import Grid from "@mui/material/Grid"
 import Skeleton from "@mui/material/Skeleton"
 
 const CharacterCardSkeleton: FC<{}> = () => (
-  <Grid item xs={12} sm={12} md={6} xl={4} sx={{ display: "flex" }}>
+  <Grid component='li' item xs={12} sm={12} md={6} xl={4} sx={{ display: "flex" }}>
     <Skeleton animation='wave' variant='rounded' width={200} height={200} />
     <Box sx={{ display: "flex", flexDirection: "column", padding: "16px" }}>
       <Skeleton animation='wave' variant='text' width={250} sx={{ fontSize: "1.35rem" }} />

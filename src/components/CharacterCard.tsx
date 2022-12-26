@@ -79,7 +79,9 @@ const styles: CustomStyles = {
 
 const CharacterIntro: FC<Pick<Character, "name" | "status" | "species">> = ({ name, status, species }) => (
   <div aria-label='character-intro' style={{ marginBottom: "16px", position: "relative" }}>
-    <Typography sx={styles.CharacterName}>{name}</Typography>
+    <Typography component='h2' sx={styles.CharacterName}>
+      {name}
+    </Typography>
     <CharacterStatus
       status={status}
       getLabel={(status) => `${status} - ${species}`}
@@ -94,7 +96,7 @@ const CharacterCard: FC<Character & { openCharacterDialog: any }> = memo((props)
   const [isVisible, setIsVisible] = useState(false)
 
   return (
-    <Grid item xs={12} sm={6} md={4} xl={3} role='listitem'>
+    <Grid className='character-card' item xs={12} sm={6} md={4} xl={3} component='li'>
       <Card sx={{ ...CardContainer, visibility: isVisible ? "visible" : "hidden" }}>
         <CardMedia
           component='img'

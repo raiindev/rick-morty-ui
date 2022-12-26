@@ -163,7 +163,7 @@ const CharacterDialog: FC<CharacterDialogProps> = memo(({ open, selectedValue, o
           </Box>
           <Box sx={CharacterDialogEpisodes}>
             <Typography>Episodes:</Typography>
-            <ul style={{ listStyle: "none", padding: 0 }}>
+            <ul className='episodes-list' style={{ listStyle: "none", padding: 0 }}>
               {episodes.map(({ episode, id, name }) => (
                 <li>
                   <Typography key={id}>
