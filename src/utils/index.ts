@@ -2,7 +2,7 @@ import { useEffect } from "react"
 import { green, red, grey } from "@mui/material/colors"
 import axios, { AxiosResponse } from "axios"
 import { SxProps } from "@mui/system"
-import { Character, Episode, Info } from "../types/rickAndMortyApiInterfaces"
+import { Character, Episode, Info, Location } from "../types/rickAndMortyApiInterfaces"
 
 type AxiosFetchCall<T> = Promise<AxiosResponse<T>>
 
@@ -40,6 +40,9 @@ export const getCharacters: (page: number, searchFilter: string) => AxiosFetchCa
 export const getCharacterEpisodes: (characterEpisodes: number[]) => AxiosFetchCall<Episode[] | Episode> = async (
   characterEpisodes
 ) => await axios.get<Episode[] | Episode>(`https://rickandmortyapi.com/api/episode/${characterEpisodes.toString()}`)
+
+export const getLocationInfo: (locationUrl: string) => AxiosFetchCall<Location> = async (locationUrl) =>
+  await axios.get<Location>(locationUrl)
 
 export const scrollToTop: () => void = () => {
   window.scrollTo(0, 0)

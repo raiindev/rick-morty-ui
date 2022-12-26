@@ -1,4 +1,4 @@
-import { FC, memo, useEffect, useState } from "react"
+import { FC, memo, useEffect, useState, MouseEventHandler, useRef } from "react"
 import { Theme, useTheme } from "@mui/material/styles"
 import Typography from "@mui/material/Typography"
 import Dialog from "@mui/material/Dialog"
@@ -6,8 +6,8 @@ import DialogContent from "@mui/material/DialogContent"
 import DialogTitle from "@mui/material/DialogTitle"
 import Box from "@mui/material/Box"
 import Chip from "@mui/material/Chip"
-import { Character, Episode } from "../types/rickAndMortyApiInterfaces"
-import { getCharacterEpisodes, getEpisodesNumber, CustomStyles, getStatusColor } from "../utils"
+import { Character, Episode, Location } from "../types/rickAndMortyApiInterfaces"
+import { getCharacterEpisodes, getEpisodesNumber, getLocationInfo, CustomStyles, getStatusColor } from "../utils"
 
 const getStyles: (theme: Theme) => CustomStyles = (theme) => ({
   CharacterDialogContainer: {
@@ -60,7 +60,6 @@ const getStyles: (theme: Theme) => CustomStyles = (theme) => ({
     alignItems: "baseline",
     display: "flex",
     justifyContent: "center",
-    marginBottom: "16px",
     textAlign: "center",
 
     "p:first-of-type": {
@@ -77,6 +76,33 @@ const getStyles: (theme: Theme) => CustomStyles = (theme) => ({
       flexDirection: "column",
       "p:first-of-type": {
         margin: 0,
+      },
+    },
+  },
+  CharacterDialogLocationInfos: {
+    alignItems: "center",
+    display: "flex",
+    flexDirection: "column",
+    marginBottom: "16px",
+    textAlign: "center",
+
+    "& p": {
+      fontSize: ".75rem",
+    },
+
+    ">p:first-of-type:hover": {
+      cursor: "pointer",
+      textDecoration: "underline",
+    },
+
+    ".location-infos": {
+      display: "none",
+      marginTop: "8px",
+    },
+
+    "&.show": {
+      ".location-infos": {
+        display: "block",
       },
     },
   },
@@ -107,22 +133,32 @@ export interface CharacterDialogProps {
 
 const CharacterDialog: FC<CharacterDialogProps> = memo(({ open, selectedValue, onClose }) => {
   const theme = useTheme()
+  const locationRef = useRef(null)
   const [episodes, setEpisodes] = useState<Pick<Episode, "id" | "episode" | "name">[] | never[]>([])
+  const [locationInfo, setLocationInfo] = useState<Location | undefined>(undefined)
 
   useEffect(() => {
-    if (selectedValue?.episode) {
+    if (selectedValue?.episode && selectedValue?.location) {
       const episodesNumber = getEpisodesNumber(selectedValue?.episode)
-      getCharacterEpisodes(episodesNumber)
-        .then(({ data }) => {
-          if (Array.isArray(data)) {
-            setEpisodes(data.map(({ episode, id, name }) => ({ episode, id, name })))
+      Promise.all([getCharacterEpisodes(episodesNumber), getLocationInfo(selectedValue.location.url)])
+        .then(([resEpisodes, resLocationInfo]) => {
+          if (Array.isArray(resEpisodes.data)) {
+            setEpisodes(resEpisodes.data.map(({ episode, id, name }) => ({ episode, id, name })))
           } else {
-            setEpisodes([{ episode: data.episode, id: data.id, name: data.name }])
+            setEpisodes([{ episode: resEpisodes.data.episode, id: resEpisodes.data.id, name: resEpisodes.data.name }])
           }
+          setLocationInfo(resLocationInfo.data)
         })
         .catch(console.error)
     }
   }, [selectedValue])
+
+  const onShowMoreInfosClick: MouseEventHandler<HTMLSpanElement> = () => {
+    if (locationRef?.current) {
+      const locationDiv = locationRef.current as HTMLDivElement
+      locationDiv.classList.toggle("show")
+    }
+  }
 
   if (selectedValue) {
     const { gender, image, location, name, species, status } = selectedValue
@@ -134,6 +170,7 @@ const CharacterDialog: FC<CharacterDialogProps> = memo(({ open, selectedValue, o
       CharacterDialogChipsContainer,
       CharacterDialogChip,
       CharacterDialogLocation,
+      CharacterDialogLocationInfos,
       CharacterDialogEpisodes,
     } = getStyles(theme)
 
@@ -152,6 +189,22 @@ const CharacterDialog: FC<CharacterDialogProps> = memo(({ open, selectedValue, o
             <Typography>Last seen in:</Typography>
             <Typography>{location.name}</Typography>
           </Box>
+          <Box sx={CharacterDialogLocationInfos} ref={locationRef}>
+            <Typography onClick={(e) => onShowMoreInfosClick(e)}>(Show location infos)</Typography>
+            {locationInfo && (
+              <Box className='location-infos'>
+                <Typography>
+                  Type: <b>{locationInfo.type}</b>
+                </Typography>
+                <Typography>
+                  Dimension: <b>{locationInfo.dimension}</b>
+                </Typography>
+                <Typography>
+                  Nº of residents: <b>{locationInfo.residents.length}</b>
+                </Typography>
+              </Box>
+            )}
+          </Box>
           <Box sx={CharacterDialogChipsContainer}>
             <Chip
               sx={{ ...CharacterDialogChip, borderColor: getStatusColor(status) }}
@@ -165,8 +218,8 @@ const CharacterDialog: FC<CharacterDialogProps> = memo(({ open, selectedValue, o
             <Typography>Episodes:</Typography>
             <ul className='episodes-list' style={{ listStyle: "none", padding: 0 }}>
               {episodes.map(({ episode, id, name }) => (
-                <li>
-                  <Typography key={id}>
+                <li key={id}>
+                  <Typography>
                     {episode} - {name}
                   </Typography>
                 </li>
