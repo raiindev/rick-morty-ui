@@ -116,7 +116,7 @@ const Header: FC<{ onSearch: (value: string) => void }> = memo(({ onSearch }) =>
         <Box sx={SearchBox}>
           <input
             placeholder='Find a character'
-            aria-label='Find a character'
+            aria-placeholder='Find a character'
             onChange={(e) => setValue(e.target.value)}
           />
           <Search />

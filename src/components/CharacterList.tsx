@@ -93,7 +93,14 @@ const CharacterList: FC<{
 
   return (
     <InfiniteScrollProvider callback={onScrollCallBackFn} hasMore={hasMore}>
-      <Grid className='characters-list' container component='ul' spacing={2} sx={{ listStyle: "none", padding: 0 }}>
+      <Grid
+        className='characters-list'
+        container
+        component='ul'
+        spacing={2}
+        sx={{ listStyle: "none", padding: 0 }}
+        aria-label='characters list'
+      >
         {searchString !== "" && !charactersData.characters.length ? noResultsComponent : memoizedCards}
       </Grid>
       <CharacterDialog
