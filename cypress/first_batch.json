@@ -11,11 +11,11 @@
     "image": "http://dummyimage.com/112x100.png/ff4444/ffffff",
     "origin": {
       "name": "Bignoniaceae",
-      "url": "https://java.com/vestibulum/ante/ipsum/primis/in/faucibus.aspx?vestibulum=venenatis&sit=turpis&amet=enim&cursus=blandit&id=mi&turpis=in&integer=porttitor&aliquet=pede&massa=justo&id=eu&lobortis=massa&convallis=donec&tortor=dapibus&risus=duis&dapibus=at&augue=velit&vel=eu&accumsan=est&tellus=congue&nisi=elementum&eu=in&orci=hac&mauris=habitasse&lacinia=platea&sapien=dictumst&quis=morbi"
+      "url": "https://rickandmortyapi.com/api/location/3"
     },
     "location": {
       "name": "Russia",
-      "url": "https://theatlantic.com/nulla/sed/vel.jsp?ante=eget&ipsum=congue&primis=eget&in=semper&faucibus=rutrum&orci=nulla&luctus=nunc&et=purus&ultrices=phasellus&posuere=in&cubilia=felis&curae=donec&donec=semper&pharetra=sapien&magna=a&vestibulum=libero&aliquet=nam"
+      "url": "https://rickandmortyapi.com/api/location/3"
     },
     "episode": []
   },

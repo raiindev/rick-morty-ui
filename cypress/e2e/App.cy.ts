@@ -17,6 +17,19 @@ describe("Rick & Morty UI", () => {
       name: "The Mock",
     },
   ]
+  const mockedLocation = {
+    id: 1,
+    name: "Earth",
+    type: "Planet",
+    dimension: "Dimension C-137",
+    residents: [
+      "https://rickandmortyapi.com/api/character/1",
+      "https://rickandmortyapi.com/api/character/2",
+      // ...
+    ],
+    url: "https://rickandmortyapi.com/api/location/1",
+    created: "2017-11-10T12:42:04.162Z",
+  }
 
   beforeEach(() => {
     cy.visit("http://localhost:3000")
@@ -71,7 +84,7 @@ describe("Rick & Morty UI", () => {
       cy.scrollTo("bottom")
     })
 
-    cy.wait("@getCharactersSecondPage").then(() => {
+    cy.wait("@getCharactersSecondPage", { timeout: 10000 }).then(() => {
       cy.get("ul.MuiGrid-container", { timeout: 10000 }).should("exist").children().should("have.length", 40)
     })
   })
@@ -93,7 +106,7 @@ describe("Rick & Morty UI", () => {
     ).as("getFilteredCharacters")
 
     cy.wait("@getCharactersFirstPage").then(() => {
-      cy.get("input[aria-label='Find a character']").type("Antonino")
+      cy.get("input[aria-placeholder='Find a character']").type("Antonino")
     })
 
     cy.wait("@getFilteredCharacters").then(() => {
@@ -117,6 +130,13 @@ describe("Rick & Morty UI", () => {
       },
       mockedCharacterEpisodes
     ).as("getCharacterEpisodes")
+    cy.intercept(
+      {
+        method: "GET",
+        url: "https://rickandmortyapi.com/api/location*",
+      },
+      mockedLocation
+    ).as("getLocationInfo")
 
     cy.wait("@getCharacters").then(() => {
       cy.get(".character-card:first-of-type button").should("exist").trigger("click")
