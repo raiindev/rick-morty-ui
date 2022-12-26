@@ -39,18 +39,21 @@ const getStyles: (theme: Theme) => CustomStyles = (theme) => ({
   CharacterDialogTitle: {
     fontSize: "2rem",
     fontWeight: 700,
-    marginTop: "100px",
+    lineHeight: 1,
+    marginTop: "110px",
+    textAlign: "center",
 
-    [theme.breakpoints.down("sm")]: {
-      fontSize: "1.5rem",
+    [theme.breakpoints.up("sm")]: {
+      lineHeight: 1.5,
+      marginTop: "100px",
     },
   },
   CharacterDialogChipsContainer: {
     display: "flex",
   },
   CharacterDialogChip: {
-    color: "white",
     borderWidth: "2px",
+    color: "white",
     margin: "0 6px 12px 0",
   },
   CharacterDialogLocation: {
@@ -84,9 +87,11 @@ const getStyles: (theme: Theme) => CustomStyles = (theme) => ({
       fontWeight: 700,
       marginBottom: "8px",
     },
-    div: {
+    ul: {
+      listStyle: "none",
       maxHeight: "200px",
       overflow: "auto",
+      padding: 0,
     },
     "div p": {
       fontSize: ".95rem",
@@ -158,13 +163,15 @@ const CharacterDialog: FC<CharacterDialogProps> = memo(({ open, selectedValue, o
           </Box>
           <Box sx={CharacterDialogEpisodes}>
             <Typography>Episodes:</Typography>
-            <Box>
+            <ul style={{ listStyle: "none", padding: 0 }}>
               {episodes.map(({ episode, id, name }) => (
-                <Typography key={id}>
-                  {episode} - {name}
-                </Typography>
+                <li>
+                  <Typography key={id}>
+                    {episode} - {name}
+                  </Typography>
+                </li>
               ))}
-            </Box>
+            </ul>
           </Box>
         </DialogContent>
       </Dialog>
